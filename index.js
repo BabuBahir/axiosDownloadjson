@@ -16,17 +16,17 @@ router.get("/",function(req,res){
     res.sendFile(path + "index.html");
 });
  
-router.post("/getdata",function(req,res){
-    console.log(req.body);
+router.get("/getdata",function(req,res){
+    
     axios.get('https://jsonplaceholder.typicode.com/posts')
     .then(function(response){   
-            
-                fs.writeFile(filepath, response.data[1].body, 'utf8', function (err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    res.download(filepath);
-                });                 
+         res.send(response.data);   
+                // fs.writeFile(filepath, response.data[1].body, 'utf8', function (err) {
+                //     if (err) {
+                //         return console.log(err);
+                //     }
+                //     res.download(filepath);
+                // });                 
     });      
 });
 
