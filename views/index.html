@@ -1,10 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-<form method="get" action="/getdata">
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        var Vurl =  "/getdata?" + "targetUrl=" + $("#targetUrl").val() ;
+        console.log(Vurl)
+         
+            $.ajax({ 
+                url :Vurl,                 
+                success:function(data) {
 
-    <span>From Data   </spanFrom> <input name="fromDate" type="text"   >
-    <br/> <br/> <br/> <br/>
-    <span>To Data   </spanFrom> <input name="toDate" type="text"   >
-        <br/> <hr/>     
+                    console.log(data)     
+                    $('#dataTable').html('');  
+                    $("#dataTable").show();            
+                    $(data).each(function( i,item ) {
+                        console.log(item)
+                        var row = $('<tr><td>Title :</td><td>'+ item.title +'</td></tr>'); //create row
+                        $('#dataTable').append(row);
+                    })
+                },
+                error: function (error) {
+                    console.log(error)
+                }                     
+        });
+    });
+});
+</script>
 
-    <button type="submit" > Download Data</button>
-</form>
+</head>
+
+<body class="container"> 
+    <br/>
+    <table class="table table-bordered ">
+            <tr>
+                    <td> 
+                            targetUrl
+                    </td>
+                    <td>
+                            <input id="targetUrl" type="text"  >
+                    </td>                     
+            </tr>
+
+            <tr>
+                    <td> 
+                            From Data
+                    </td>
+                    <td>
+                            <input id="fromDate" type="text"   >
+                    </td>                     
+            </tr>
+            <tr>
+                    <td> 
+                            To Data
+                    </td>
+                    <td>
+                            <input id="toDate" type="text"   >
+                    </td>                     
+            </tr>
+
+    </table>
+    
+    <br/>  
+
+    <button  type="button" class="btn btn-success"> Download Data</button>
+
+    <hr/>
+
+    <table id="dataTable" style="display:none" class="table table-bordered ">
+            
+    </table>
+
+</body>
+
+</html>

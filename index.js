@@ -17,8 +17,8 @@ router.get("/",function(req,res){
 });
  
 router.get("/getdata",function(req,res){
-    
-    axios.get('https://jsonplaceholder.typicode.com/posts')
+    var targetUrl = (req.query.targetUrl);     
+    axios.get(targetUrl)
     .then(function(response){   
          res.send(response.data);   
                 // fs.writeFile(filepath, response.data[1].body, 'utf8', function (err) {
