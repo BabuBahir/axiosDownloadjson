@@ -3,4 +3,5 @@ node_modules/
 *.DS_Store
 dist/bundle.js
 coverage
+downloadtoData.js
 package-lock.json
