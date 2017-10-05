@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 var axios = require("axios");
+ var request = require("request");
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var path = __dirname + '/views/';
@@ -21,31 +22,23 @@ router.get("/",function(req,res){
 });
  
 router.get("/getdata",function(req,res){
-    var formdata = configAxios.formdata; //(req.query.fromDate);     
-   
-    axios.post('https://www.localgov.ie/en/views/ajax', {     
-
+    var formdata ={
+        
       validation_date_from: "01/10/2017",       
       view_name : "bcsm_search_results",
       view_display_id : "notice_search_pane",
       view_path : "bcms/search"
-      
-    })
-    .then(function(response){    
-          console.log( response.data )
-       //  res.send( JSON.stringify(response.data[0]) );   
-                // fs.writeFile(filepath, response.data[1].body, 'utf8', function (err) {
-                //     if (err) {
-                //         return console.log(err);
-                //     }
-                //     res.download(filepath);
-                // });                 
-    })
-    .catch(function (error) {
-      console.log(util.inspect(error, {showHidden: true, depth: null}))
-       
-      res.send(error);
-    });      
+    } ;
+   
+    request.post({
+      url: 'https://www.localgov.ie/en/views/ajax',
+      form: formdata
+  },
+  function (err, httpResponse, body) {
+      console.log(body.length);
+      res.send(body)
+  });
+
 });
 
 app.use(bodyParser.urlencoded({ extended: false }));
