@@ -35,8 +35,9 @@ router.get("/getdata",function(req,res){
       form: formdata
   },
   function (err, httpResponse, body) {
-      console.log(body.length);
-      res.send(body)
+    resObj =   JSON.parse(body);
+      console.log( resObj[1] );
+      res.send( resObj[1] )
   });
 
 });
