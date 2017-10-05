@@ -8,9 +8,10 @@
 <script>
 $(document).ready(function(){
     $("button").click(function(){
-       // var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() ;              
+         var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val() ;              
+         console.log(Vurl)
             $.ajax({ 
-                url :"/getdata",                 
+                url :Vurl,                 
                 success:function(response) {
 
                     console.log(response)     

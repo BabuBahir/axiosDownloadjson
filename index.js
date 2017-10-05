@@ -22,9 +22,13 @@ router.get("/",function(req,res){
 });
  
 router.get("/getdata",function(req,res){
-    var formdata ={
-        
-      validation_date_from: "01/10/2017",       
+
+   fromDate=req.query.fromDate;
+   toDate=req.query.toDate;
+
+    var formdata ={        
+      validation_date_from: fromDate,     
+      validation_date_to : toDate,  
       view_name : "bcsm_search_results",
       view_display_id : "notice_search_pane",
       view_path : "bcms/search"
@@ -36,8 +40,8 @@ router.get("/getdata",function(req,res){
   },
   function (err, httpResponse, body) {
     resObj =   JSON.parse(body);
-      console.log( resObj[1] );
-      res.send( resObj[1] )
+       
+      res.send( resObj[1] );
   });
 
 });
