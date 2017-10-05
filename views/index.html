@@ -8,18 +8,16 @@
 <script>
 $(document).ready(function(){
     $("button").click(function(){
-        var Vurl =  "/getdata?" + "targetUrl=" + $("#targetUrl").val() ;
-        console.log(Vurl)
-         
+       // var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() ;              
             $.ajax({ 
-                url :Vurl,                 
+                url :"/getdata",                 
                 success:function(data) {
 
                     console.log(data)     
                     $('#dataTable').html('');  
                     $("#dataTable").show();            
                     $(data).each(function( i,item ) {
-                        console.log(item)
+                        console.log(  $.trim( item) )
                         var row = $('<tr><td>Title :</td><td>'+ item.title +'</td></tr>'); //create row
                         $('#dataTable').append(row);
                     })
@@ -37,14 +35,7 @@ $(document).ready(function(){
 <body class="container"> 
     <br/>
     <table class="table table-bordered ">
-            <tr>
-                    <td> 
-                            targetUrl
-                    </td>
-                    <td>
-                            <input id="targetUrl" type="text"  >
-                    </td>                     
-            </tr>
+           
 
             <tr>
                     <td> 
