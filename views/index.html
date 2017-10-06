@@ -7,23 +7,51 @@
 
 <script>
 $(document).ready(function(){
+
+
     $("button").click(function(){
          var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val() ;              
          console.log(Vurl)
             $.ajax({ 
                 url :Vurl,                 
                 success:function(response) {
-
-                    console.log(response)     
+                    var htmlContent = response.data;
+                    var top10ResultsObj = (JSON.parse(response));
                     $('#dataTable').html('');  
-                    $("#dataTable").show();            
-                    $('#dataTable').html(response.data);
+                    $("#dataTable").show();  
+
+                    $.each( top10ResultsObj ,function(i,item){
+                           callNodeUrl(item)
+                    });
+
+                       
+                     
                 },
                 error: function (error) {
                     console.log(error)
                 }                     
         });
     });
+
+ 
+function callNodeUrl(item){       
+$.ajax({
+        url: "/callNodeUrl?nodeUrl="+item,
+        success:function(response) {
+        var data =response;
+        $("#dataTable").append("<a target='_blank' href='https://www.localgov.ie"+item+"'"
+                        +'class="btn btn-info" role="button">Link Button</a>');
+        $("#dataTable").append( data);
+        $("#dataTable").append('<hr style="height:1px;border:none;color:#333;background-color:#333;" /> ');    
+
+        },
+        error: function (error) {
+                console.log(error)
+        }    
+});
+}
+
+
 });
 </script>
 
