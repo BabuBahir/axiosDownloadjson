@@ -5,6 +5,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+
 <script>
 $(document).ready(function(){
 
@@ -14,10 +15,10 @@ $(document).ready(function(){
         }).bind('ajaxComplete', function(){
                 $("#actionArea").show();
                 $('#loading-image').hide();
-        });
+        });        
 
 
-    $("button").click(function(){
+    $("button").click(function(){         
          var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val() ;              
            
             $.ajax({ 
@@ -29,8 +30,7 @@ $(document).ready(function(){
                     $('#totalRecordsSpan').show();
                     $("#dataTable").show();  
                     $('#dataTable').html(response.sectionArr);  
-                    $('#totalRecordsSpan').text(response.totalRecords + "  Records Found !!!");  
-                   console.log(response);
+                    $('#totalRecordsSpan').text(response.totalRecords + "  Records Found !!!");                      
                 
                 },
                 complete: function(){
@@ -43,24 +43,24 @@ $(document).ready(function(){
     });
 
  
-function callNodeUrl(item){       
-$.ajax({
-        url: "/callNodeUrl?nodeUrl="+item,
-        success:function(response) {
-        var data =response;
-        $("#dataTable").append("<a target='_blank' href='https://www.localgov.ie"+item+"'"
-                        +'class="btn btn-info" role="button">Link Button</a>');
-        $("#dataTable").append( data);
-        $("#dataTable").append('<hr style="height:1px;border:none;color:#333;background-color:#333;" /> ');    
+        function callNodeUrl(item){       
+        $.ajax({
+                url: "/callNodeUrl?nodeUrl="+item,
+                success:function(response) {
+                var data =response;
+                $("#dataTable").append("<a target='_blank' href='https://www.localgov.ie"+item+"'"
+                                +'class="btn btn-info" role="button">Link Button</a>');
+                $("#dataTable").append( data);
+                $("#dataTable").append('<hr style="height:1px;border:none;color:#333;background-color:#333;" /> ');    
 
-        },
-        error: function (error) {
-                console.log(error)
-        }    
-});
-}
+                },
+                error: function (error) {
+                        console.log(error)
+                }    
+        });
+        }
 
-
+ 
 });
 </script>
 
@@ -78,7 +78,7 @@ $.ajax({
                             From Data
                     </td>
                     <td>
-                            <input id="fromDate" type="date"  placeholder="01/10/2017" >
+                            <input id="fromDate" type="date"   value="2017-10-01" >
                     </td>                     
             </tr>
             <tr>
@@ -86,7 +86,7 @@ $.ajax({
                             To Data
                     </td>
                     <td>
-                            <input id="toDate" type="date"   placeholder="01/10/2017" >
+                            <input id="toDate" type="date"   value="2017-10-03" >
                     </td>                     
             </tr>
 
@@ -101,5 +101,34 @@ $.ajax({
     <div id="dataTable" style="display:none"></div>
 </div>
 </body>
+
+<script>
+       function doThisWhenTheHashChanges(e){
+               
+              $(document).unbind('ajaxStart');
+                var Vurl =  location.hash.split("#")[1];
+           
+            $.ajax({ 
+                url :Vurl,                 
+                success:function(response) {
+                   // var htmlContent = response.data;
+                   // var top10ResultsObj = (JSON.parse(response));                    
+                    var parentDiv =  $( 'a[href*="' +location.hash + '"]').closest("div.accordion-body") ;
+                    $(parentDiv).html(response).append("<hr/>");
+                },
+                complete: function(){
+                        
+                },
+                error: function (error) {
+                    console.log(error)
+                }                     
+        });
+
+       }
+
+</script>
+<script>
+                window.addEventListener("hashchange", doThisWhenTheHashChanges, false);
+</script>
 
 </html>

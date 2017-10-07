@@ -67,9 +67,14 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
      
     function AppendHtml(item , ctr) {
       var $ = cheerio.load(item);     
-      $("div.search-results-header").prepend("<span class='badge'>"+ctr+"</span>");       
-
-        sectionArr.push($.html());                 
+      $("div.search-results-header").prepend("<span onclick='onDivFocus(this)' class='badge'>"+ctr+"</span>");       
+      $("div.search-results-header").prepend("<script> function onDivFocus(item){console.log( $(item).parent() )} </script>")
+      
+       var currentHREF = $("a").attr("href");
+        $("a").attr("href" , '#' + currentHREF) ;
+        $("a").append("<hr/>");
+        
+        sectionArr.push(  $.html()  );                 
   
         if(ctr == 29){
             res.json({ sectionArr: sectionArr , totalRecords : ctr });                               
@@ -79,17 +84,18 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
 });
 
  
-router.get("/callNodeUrl" ,function(req,res){
-  var nodeUrl = req.query.nodeUrl;
-  var Vurl = 'https://www.localgov.ie'+nodeUrl;
-  console.log( req.query.nodeUrl); 
- 
+router.get("/node/:ID" ,function(req,res){
+  var ID = req.params.ID;
+  var Vurl = 'https://www.localgov.ie/node/'+ID;
+  console.log(Vurl);
+
       request(Vurl, function (error, response, body) {     
         let $ = cheerio.load(  body );
         var sectionArr = [];
+         
               
               $("section.notice-info").each(function(i,item) {
-                var sectionHtml = $(this).html() ;
+                var sectionHtml = $(this).html() ;                
                 sectionArr.push(sectionHtml);                  
               });
 
