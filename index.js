@@ -2,7 +2,8 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 var axios = require("axios");
- var request = require("request");
+var request = require("request");
+var rp = require('request-promise');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var path = __dirname + '/views/';
@@ -30,17 +31,52 @@ router.get("/getdata",function(req,res){
    toDate = moment(toDate).format('DD/MM/YYYY');
 
   var resultCount ="";     
-   
+  var sectionArr = [];
+ // var iterration = 0;  //pagination index
+  var shouldContinue = true;
+
   var Vurl = 'https://www.localgov.ie/en/bcms/search?search_api_views_fulltext='
   +'&validation_date_from[date]='+fromDate+'&validation_date_to[date]='+toDate
-  +'&page=0';
+  +'&page=';
 
-  console.log(Vurl);
-      request(Vurl, function (error, response, body) {     
-        let $ = cheerio.load(  body );
+for(var iterration = 0 ; iterration <3 ; iterration ++){
+       var url = Vurl + iterration;
+       var ctr = 0;
         
-          res.send(Vurl);
-      });
+       var options = {
+          uri: url,
+          transform: function (body) {
+            return cheerio.load(body);
+            }
+        };
+
+        rp(options)
+        .then(function ($) {
+
+                  $("li.views-row").each(function(i,item) {                   
+                    ctr=ctr+1;   
+                    AppendHtml( $(this).html() , ctr );                                          
+              });  
+
+        })
+        .catch(function (err) {
+              console.log(err); // Crawling failed or Cheerio choked...
+        });              
+
+    } // for loop ends
+     
+    function AppendHtml(item , ctr) {
+      var $ = cheerio.load(item);      
+       $(item).html(ctr);
+        sectionArr.push(item);   
+        console.log(item);      
+
+        if(ctr == 29){
+         res.send(sectionArr);
+          return false;
+        }
+    }        
+     
 });
 
  
