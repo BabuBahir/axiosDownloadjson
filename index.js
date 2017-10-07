@@ -70,10 +70,9 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
       $("div.search-results-header").prepend("<span class='badge'>"+ctr+"</span>");       
 
         sectionArr.push($.html());                 
-
+  
         if(ctr == 29){
-         res.send(sectionArr);
-          return false;
+            res.json({ sectionArr: sectionArr , totalRecords : ctr });                               
         }
     }        
      

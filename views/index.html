@@ -18,8 +18,10 @@ $(document).ready(function(){
                    // var htmlContent = response.data;
                    // var top10ResultsObj = (JSON.parse(response));
                     $('#dataTable').html('');  
+                    $('#totalRecordsSpan').show();
                     $("#dataTable").show();  
-                    $('#dataTable').html(response);  
+                    $('#dataTable').html(response.sectionArr);  
+                    $('#totalRecordsSpan').text(response.totalRecords + "  Records Found !!!");  
                    console.log(response);
                 
                 },
@@ -80,9 +82,9 @@ $.ajax({
     <br/>  
 
     <button  type="button" class="btn btn-success"> Download Data</button>
-
-    <hr/>
-
+    <hr/>        
+    <span id="totalRecordsSpan"  class="label label-info"  style="display:none"></span>
+    <hr/>  
     <div id="dataTable" style="display:none"></div>
 
 </body>
