@@ -8,10 +8,18 @@
 <script>
 $(document).ready(function(){
 
+        $(document).bind('ajaxStart', function(){
+                $("#actionArea").hide();
+                $('#loading-image').show();
+        }).bind('ajaxComplete', function(){
+                $("#actionArea").show();
+                $('#loading-image').hide();
+        });
+
 
     $("button").click(function(){
          var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val() ;              
-         console.log(Vurl)
+           
             $.ajax({ 
                 url :Vurl,                 
                 success:function(response) {
@@ -24,6 +32,9 @@ $(document).ready(function(){
                     $('#totalRecordsSpan').text(response.totalRecords + "  Records Found !!!");  
                    console.log(response);
                 
+                },
+                complete: function(){
+                        
                 },
                 error: function (error) {
                     console.log(error)
@@ -56,6 +67,8 @@ $.ajax({
 </head>
 
 <body class="container"> 
+<img id="loading-image" src="https://goo.gl/KyGYT2" style="display: none; width:100%;">
+<div id="actionArea">
     <br/>
     <table class="table table-bordered ">
            
@@ -86,7 +99,7 @@ $.ajax({
     <span id="totalRecordsSpan"  class="label label-info"  style="display:none"></span>
     <hr/>  
     <div id="dataTable" style="display:none"></div>
-
+</div>
 </body>
 
 </html>
