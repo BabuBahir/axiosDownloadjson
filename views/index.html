@@ -15,17 +15,13 @@ $(document).ready(function(){
             $.ajax({ 
                 url :Vurl,                 
                 success:function(response) {
-                    var htmlContent = response.data;
-                    var top10ResultsObj = (JSON.parse(response));
+                   // var htmlContent = response.data;
+                   // var top10ResultsObj = (JSON.parse(response));
                     $('#dataTable').html('');  
                     $("#dataTable").show();  
-
-                    $.each( top10ResultsObj ,function(i,item){
-                           callNodeUrl(item)
-                    });
-
-                       
-                     
+                    $('#dataTable').html(response);  
+                   console.log(htmlContent);
+                
                 },
                 error: function (error) {
                     console.log(error)

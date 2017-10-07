@@ -10,7 +10,9 @@ var filepath = __dirname + '/downloadtoData.js';
 var configAxios = require( __dirname +"/public/" + "configAxios");
 var util = require('util');
 var cheerio = require('cheerio');
+var moment = require('moment');
  
+
 router.use(function (req,res,next) {
   console.log("/" + req.method);
   next();
@@ -23,53 +25,22 @@ router.get("/",function(req,res){
 router.get("/getdata",function(req,res){
 
    var fromDate=req.query.fromDate;
+   fromDate = moment(fromDate).format('DD/MM/YYYY');
    var toDate=req.query.toDate;
-   var resultCount ="";
+   toDate = moment(toDate).format('DD/MM/YYYY');
 
-   var formdata ={        
-      validation_date_from: fromDate,     
-      validation_date_to : toDate,  
-      view_name : "bcsm_search_results",
-      view_display_id : "notice_search_pane",
-      view_path : "bcms/search"
-    } ; 
+  var resultCount ="";     
    
-    request.post({
-      url: 'https://www.localgov.ie/en/views/ajax',
-      form: formdata
-  },
+  var Vurl = 'https://www.localgov.ie/en/bcms/search?search_api_views_fulltext='
+  +'&validation_date_from[date]='+fromDate+'&validation_date_to[date]='+toDate
+  +'&page=0';
 
-
-    function (err, httpResponse, body) {
-        if(err) console.log(err);
-
-        resObj =   JSON.parse(body);
-        let $ = cheerio.load(  resObj[1].data );
-      
-          $(".view-header").each(function() {
-              var headerhtml = $(this).html() ;
-              var resultCount =(  headerhtml.split("results")[0]   ).trim();
-              listTop10ItemsJSON =  listTop10Items(resultCount) ;      
-              res.send( listTop10ItemsJSON);
-          });
-
-          function listTop10Items(resultCount){
-                var listTop10ItemsJSON = [];
-                
-                if(resultCount >= 10){
-                      $('a').each(function(i, element){                       
-                        listTop10ItemsJSON.push(  $(this).attr('href')  );
-                        if(i==9){
-                          return false;    //break foreach
-                        }
-
-                    });
-                }               
-              return JSON.stringify(listTop10ItemsJSON);
-          }
-      
-    });
-
+  console.log(Vurl);
+      request(Vurl, function (error, response, body) {     
+        let $ = cheerio.load(  body );
+        
+          res.send(Vurl);
+      });
 });
 
  
