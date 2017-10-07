@@ -55,8 +55,8 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
 
                   $("li.views-row").each(function(i,item) {                   
                     ctr=ctr+1;   
-                    AppendHtml( $(this).html() , ctr );                                          
-              });  
+                    AppendHtml( $(this).html() , ctr );                                                            
+              });   
 
         })
         .catch(function (err) {
@@ -66,10 +66,10 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
     } // for loop ends
      
     function AppendHtml(item , ctr) {
-      var $ = cheerio.load(item);      
-       $(item).html(ctr);
-        sectionArr.push(item);   
-        console.log(item);      
+      var $ = cheerio.load(item);     
+      $("div.search-results-header").prepend("<span class='badge'>"+ctr+"</span>");       
+
+        sectionArr.push($.html());                 
 
         if(ctr == 29){
          res.send(sectionArr);
