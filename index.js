@@ -32,14 +32,15 @@ router.get("/getdata",function(req,res){
 
   var resultCount ="";     
   var sectionArr = [];
- // var iterration = 0;  //pagination index
+  var iterration = 0;  //pagination index
+  var maxIterration = 0;
   var shouldContinue = true;
 
   var Vurl = 'https://www.localgov.ie/en/bcms/search?search_api_views_fulltext='
   +'&validation_date_from[date]='+fromDate+'&validation_date_to[date]='+toDate
   +'&page=';
 
-for(var iterration = 0 ; iterration <3 ; iterration ++){
+for(var iterration = 0 ; iterration < 20 ; iterration ++){
        var url = Vurl + iterration;
        var ctr = 0;
         
@@ -52,10 +53,12 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
 
         rp(options)
         .then(function ($) {
-
+             
+              maxIterration = $("div.view-header").html().split("results")[0].trim() ;
+           
                   $("li.views-row").each(function(i,item) {                   
                     ctr=ctr+1;   
-                    AppendHtml( $(this).html() , ctr );                                                            
+                    AppendHtml( $(this).html() , ctr , maxIterration );                                                            
               });   
 
         })
@@ -65,7 +68,9 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
 
     } // for loop ends
      
-    function AppendHtml(item , ctr) {
+    function AppendHtml(item , ctr , maxIterration) {
+
+      // DOM manipulations -- start
       var $ = cheerio.load(item);     
       $("div.search-results-header").prepend("<span onclick='onDivFocus(this)' class='badge'>"+ctr+"</span>");       
       $("div.search-results-header").prepend("<script> function onDivFocus(item){console.log( $(item).parent() )} </script>")
@@ -74,9 +79,11 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
         $("a").attr("href" , '#' + currentHREF) ;
         $("a").append("<hr/>");
         
+       //  DOM manipulations -- End
+
         sectionArr.push(  $.html()  );                 
   
-        if(ctr == 29){
+        if(ctr == maxIterration){
             res.json({ sectionArr: sectionArr , totalRecords : ctr });                               
         }
     }        
@@ -86,8 +93,7 @@ for(var iterration = 0 ; iterration <3 ; iterration ++){
  
 router.get("/node/:ID" ,function(req,res){
   var ID = req.params.ID;
-  var Vurl = 'https://www.localgov.ie/node/'+ID;
-  console.log(Vurl);
+  var Vurl = 'https://www.localgov.ie/node/'+ID;   
 
       request(Vurl, function (error, response, body) {     
         let $ = cheerio.load(  body );
