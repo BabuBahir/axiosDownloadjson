@@ -31,18 +31,22 @@ router.get("/getdata", function (req, res) {
       toDate = moment(toDate).format('DD/MM/YYYY');
       var ctr = 0;  
       var nodeArr = [];
+      var Maxitteration = 5;
      
 
       var Vurl = 'https://www.localgov.ie/en/bcms/search?search_api_views_fulltext=' +
         '&validation_date_from[date]=' + fromDate + '&validation_date_to[date]=' + toDate +
         '&page=';
       
-      for(var itteration =0 ; itteration < 10 ; itteration++){
-        tempurl = Vurl + itteration;
-             
+       
+      for(var itteration =0 ; itteration < Maxitteration ; itteration++){
+         tempurl = Vurl + itteration;
+            
+         console.log(tempurl);
+
           x(tempurl, 'body@html')(function(err, body) {
-            $ = cheerio.load(body);
-                      
+            $ = cheerio.load(body);                     
+ 
             $("a.btn-small").each(function (i, item) {
                 var sectionhref = $(this).attr("href");
                 ctr++;
