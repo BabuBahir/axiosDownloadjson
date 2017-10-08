@@ -19,7 +19,8 @@
     "moment": "^2.18.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
-    "x-ray": "^2.3.2"
+    "request-x-ray": "^0.1.4",
+    "x-ray": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^1.12.1"
