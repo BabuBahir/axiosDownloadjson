@@ -18,7 +18,8 @@
     "express": "^4.16.1",
     "moment": "^2.18.1",
     "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "x-ray": "^2.3.2"
   },
   "devDependencies": {
     "nodemon": "^1.12.1"
