@@ -54,8 +54,9 @@ router.get("/getdata", function (req, res) {
        
                           
         console.log(Vurl);
-
-         x(Vurl, 'li.views-row', [{
+         
+        // fs.unlinkSync('results.json');  // clear previous contetn
+  x(Vurl, 'li.views-row', [{
           link: 'a@href',
           
         }]).paginate('.pager-next > a@href').limit(100) 
@@ -64,12 +65,9 @@ router.get("/getdata", function (req, res) {
               console.log('An exception occured.')
               //callback(err);
               return;
-            } 
-            
-            res.send (obj);
+            }             
  
-  
-
+            res.send (obj);  
             obj.forEach(( item , i) => {
                  
                 x(item.link, 'body@html' )(function(err, body) {
@@ -83,32 +81,26 @@ router.get("/getdata", function (req, res) {
                       fs.appendFileSync('results.json', "\r\n"); 
                 });
  
-            });
-
-            
-        
-            callback(null, obj)
+            }); 
+             
+            callback(null, obj);
+                              
           });
-
     
   });
-
  
 
 
+router.get("/downloadFile" , function (req , res ){
+  fs.createReadStream('results.json');
+     res.send("ep");
+});
 
 
 
 
 
-
-
-
-
-
-
-
-    router.get("/node/:ID", function (req, res) {
+router.get("/node/:ID", function (req, res) {
       var ID = req.params.ID;
       var Vurl = 'https://www.localgov.ie/node/' + ID;
 
