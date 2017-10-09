@@ -13,7 +13,7 @@ var util = require('util');
 var cheerio = require('cheerio');
 var moment = require('moment');
 var xray = require('x-ray');
-var x = xray();
+var x = xray(); 
 const makeDriver = require('request-x-ray');
 
 
@@ -52,72 +52,48 @@ router.get("/getdata", function (req, res) {
       var Vurl = 'https://www.localgov.ie/en/bcms/search?search_api_views_fulltext=' +
         '&validation_date_from[date]=' + fromDate + '&validation_date_to[date]=' + toDate ;         
        
-         tempurl = Vurl  ;                      
-   
-         scrapeUrl(tempurl, function(err, obj) {
-          if(err) {
-            console.log(err);
-          } else {
-            obj.forEach((linker) => {
-              var link = linker.link;
-              
-              genericScrape(link, (err, obj) => {
-                if(obj.title) {
-                  console.log(util.format("%s :::: %s", obj.title.trim(), obj.links.trim()))
-                }
-              });
+                          
+        console.log(Vurl);
+
+         x(Vurl, 'li.views-row', [{
+          link: 'a@href',
+          
+        }]).paginate('.pager-next > a@href').limit(100) 
+          (function(err, obj) {
+            if(err || !obj) {
+              console.log('An exception occured.')
+              //callback(err);
+              return;
+            } 
+            
+            res.send (obj);
+ 
+  
+
+            obj.forEach(( item , i) => {
+                 
+                x(item.link, 'body@html' )(function(err, body) {
+                     var $ = cheerio.load(body);   
+ 
+                      $("div.field-item").each(function(i,section) {
+                            var sectionHtml = $(this).html() ;                            
+                            fs.appendFileSync('results.json', sectionHtml);
+                            
+                      });
+                      fs.appendFileSync('results.json', "\r\n"); 
+                });
+ 
             });
-          }
-        }); 
-       
+
+            
+        
+            callback(null, obj)
+          });
+
     
   });
 
-
  
-var scrapeUrl = function(url, callback) {
- 
-  x(url, 'li.views-row', [{
-  title: '.search-results-title',
-  
-}]) .paginate('.pager-item > a@href').limit(5)
-  (function(err, obj) {
-    if(err || !obj) {
-      console.log('An exception occured.')
-      //callback(err);
-      return;
-    }
-    console.log(obj)
-    obj.forEach((item) => {
-      var start = item.link.indexOf('q=')
-      var end = item.link.indexOf('&sa')
-      item.link = item.link.substring(start + 2, end)
-    })
-
-    callback(null, obj)
-  })
-}
-
-
-  var genericScrape = function(url, callback) {
-  
-    x(url, 'html', {
-      title: 'title',
-      links: 'a@href'
-    })((err, obj) => {
-      if(err || !obj) {
-        callback(err)
-        return;
-      }
-      callback(null, obj);
-    });
-  }
-
-
-
-
-
-
 
 
 

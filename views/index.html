@@ -22,20 +22,29 @@ $(document).ready(function(){
          var Vurl =  "/getdata?" + "fromDate=" + $("#fromDate").val() + "&toDate=" + $("#toDate").val() ;              
            
             $.ajax({ 
-                url :Vurl,                 
+                url :Vurl,          
+                timeout: 9000000,
+                async: false ,
                 success:function(response) {
+                        console.log(response)
                    // var htmlContent = response.data;
-                   // var top10ResultsObj = (JSON.parse(response));
+                   //   var  ResultsObj = (JSON.parse(response));
                     $('#dataTable').html('');  
                     $('#totalRecordsSpan').show();
                     $("#dataTable").show();  
-                    $('#dataTable').html(response.sectionArr);  
-                    $('#totalRecordsSpan').text(response.totalRecords + "  Records Found !!!");                      
+
+                    $.each(response , function(i , item ){
+                        
+                         $('#dataTable').append( (i+1)  +"  : "+item.link);  
+                         $('#dataTable').append("<br/>")
+                    });
+
+                    $('#totalRecordsSpan').text(  response.length + "records found !!!!!");                      
                 
                 },
                 complete: function(){
-                        
-                },
+                         
+                }, 
                 error: function (error) {
                     console.log(error)
                 }                     
@@ -98,7 +107,9 @@ $(document).ready(function(){
     <hr/>        
     <span id="totalRecordsSpan"  class="label label-info"  style="display:none"></span>
     <hr/>  
-    <div id="dataTable" style="display:none"></div>
+    <div id="dataTable" style="display:none">
+        <br/><br/>
+    </div>
 </div>
 </body>
 
