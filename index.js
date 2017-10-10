@@ -15,7 +15,8 @@ var moment = require('moment');
 var xray = require('x-ray');
 var x = xray(); 
 const makeDriver = require('request-x-ray');
-
+var  forEachAsync = require('foreachasync').forEachAsync;
+const DownloadfilePath = __dirname + '\\'+ 'public'+ '\\' + "results.txt";
 
 const options = {
 	method: "GET", 						//Set HTTP method
@@ -55,7 +56,8 @@ router.get("/getdata", function (req, res) {
                           
         console.log(Vurl);
          
-        // fs.unlinkSync('results.json');  // clear previous contetn
+         fs.unlinkSync(DownloadfilePath);  // clear previous contetn
+
   x(Vurl, 'li.views-row', [{
           link: 'a@href',
           
@@ -66,21 +68,24 @@ router.get("/getdata", function (req, res) {
               //callback(err);
               return;
             }             
- 
-            res.send (obj);  
-            obj.forEach(( item , i) => {
+            
+            forEachAsync(obj , function(next , item) {
                  
                 x(item.link, 'body@html' )(function(err, body) {
                      var $ = cheerio.load(body);   
  
                       $("div.field-item").each(function(i,section) {
                             var sectionHtml = $(this).html() ;                            
-                            fs.appendFileSync('results.json', sectionHtml);
+                            fs.appendFileSync(DownloadfilePath, sectionHtml);
                             
                       });
-                      fs.appendFileSync('results.json', "\r\n"); 
+                      fs.appendFileSync(DownloadfilePath, "\r\n"); 
+                      next();
                 });
  
+            }).then(function() {
+           
+               res.send (obj);                   
             }); 
              
             callback(null, obj);
@@ -88,17 +93,7 @@ router.get("/getdata", function (req, res) {
           });
     
   });
- 
-
-
-router.get("/downloadFile" , function (req , res ){
-  fs.createReadStream('results.json');
-     res.send("ep");
-});
-
-
-
-
+  
 
 router.get("/node/:ID", function (req, res) {
       var ID = req.params.ID;

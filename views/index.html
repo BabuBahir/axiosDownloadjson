@@ -43,32 +43,19 @@ $(document).ready(function(){
                 
                 },
                 complete: function(){
-                         
- 
+                    
+                        var link = document.createElement("a");
+                        link.download = name;
+                        link.href = "/results.txt";
+                        link.click();
+                  
                 }, 
                 error: function (error) {
                     console.log(error)
                 }                     
         });
     });
-
  
-        function callNodeUrl(item){       
-        $.ajax({
-                url: "/callNodeUrl?nodeUrl="+item,
-                success:function(response) {
-                var data =response;
-                $("#dataTable").append("<a target='_blank' href='https://www.localgov.ie"+item+"'"
-                                +'class="btn btn-info" role="button">Link Button</a>');
-                $("#dataTable").append( data);
-                $("#dataTable").append('<hr style="height:1px;border:none;color:#333;background-color:#333;" /> ');    
-
-                },
-                error: function (error) {
-                        console.log(error)
-                }    
-        });
-        }
 
  
 });
@@ -76,7 +63,8 @@ $(document).ready(function(){
 
 </head>
 
-<body class="container"> 
+<body class="container">                                   
+       
 <img id="loading-image" src="https://goo.gl/KyGYT2" style="display: none; width:100%;">
 <div id="actionArea">
     <br/>
@@ -96,7 +84,7 @@ $(document).ready(function(){
                             To Data
                     </td>
                     <td>
-                            <input id="toDate" type="date"   value="2017-10-03" >
+                            <input id="toDate" type="date"   value="2017-10-02" >
                     </td>                     
             </tr>
 
@@ -109,16 +97,14 @@ $(document).ready(function(){
     <span id="totalRecordsSpan"  class="label label-info"  style="display:none"></span>
     <hr/>  
     <div id="dataTable" style="display:none">
-        <br/><br/>
+        <br/><br/>     
     </div>
 </div>
 </body>
 
 <script>
        function doThisWhenTheHashChanges(e){
-               
-              $(document).unbind('ajaxStart');
-              
+                
                 var Vurl =  location.hash.split("#")[1];
            
             $.ajax({ 
